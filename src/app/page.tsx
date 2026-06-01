@@ -14,6 +14,7 @@ import {
   TrendingUp,
   Tags,
 } from "lucide-react";
+import { HeroModel } from "@/components/HeroModel";
 import { cn } from "@/lib/utils";
 
 const STYLE_ID = "landing-animations";
@@ -48,46 +49,6 @@ const ANIMATION_STYLES = `
   50% { transform: translateY(-8px); }
 }
 `;
-
-function DeckGlyph() {
-  return (
-    <svg
-      viewBox="0 0 120 120"
-      className="h-28 w-28 md:h-36 md:w-36"
-      aria-hidden
-    >
-      <circle
-        cx="60"
-        cy="60"
-        r="46"
-        fill="none"
-        stroke="#00FF87"
-        strokeWidth="1.4"
-        className="motion-safe:animate-[li-orbit_8.5s_linear_infinite] motion-reduce:animate-none"
-        style={{ strokeDasharray: "18 14" }}
-      />
-      <rect
-        x="34"
-        y="34"
-        width="52"
-        height="52"
-        rx="14"
-        fill="rgba(0,255,135,0.06)"
-        stroke="#00FF87"
-        strokeWidth="1.2"
-        className="motion-safe:animate-[li-grid_5.4s_ease-in-out_infinite] motion-reduce:animate-none"
-      />
-      <circle cx="60" cy="60" r="7" fill="#00FF87" />
-      <path
-        d="M60 30v10M60 80v10M30 60h10M80 60h10"
-        stroke="#00FF87"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        className="motion-safe:animate-[li-pulse_6s_ease-in-out_infinite] motion-reduce:animate-none"
-      />
-    </svg>
-  );
-}
 
 const features = [
   {
@@ -395,7 +356,7 @@ export default function Landing() {
                   </div>
                 </div>
                 <div className="shrink-0 flex items-center justify-center motion-safe:animate-[li-float_6s_ease-in-out_infinite]">
-                  <DeckGlyph />
+                  <HeroModel />
                 </div>
               </div>
 
