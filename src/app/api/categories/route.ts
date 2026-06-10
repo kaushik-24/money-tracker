@@ -8,7 +8,17 @@ export async function GET() {
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const categories = await prisma.category.findMany({
-    where: session.user.isAdmin ? {} : { OR: [{ userId: null }, { userId: session.user.id }] },
+    where: session.user.isAdmin
+      ? {}
+      : {
+          OR: [
+            { userId: session.user.id },
+            {
+              userId: null,
+              NOT: { hiddenBy: { some: { userId: session.user.id } } },
+            },
+          ],
+        },
     orderBy: [{ type: "asc" }, { name: "asc" }],
   });
 

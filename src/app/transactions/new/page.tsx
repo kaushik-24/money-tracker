@@ -33,6 +33,8 @@ export default function NewTransactionPage() {
     description: "",
   });
 
+  const filteredCategories = categories.filter((c) => c.type === type);
+
   useEffect(() => {
     Promise.all([
       fetch("/api/accounts").then(async (r) => (r.ok ? r.json() : [])),
@@ -62,13 +64,13 @@ export default function NewTransactionPage() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex w-full gap-0">
-          <button type="button" onClick={() => setType("income")}
+          <button type="button" onClick={() => { setType("income"); setForm((f) => ({ ...f, categoryId: "" })); }}
             className={`flex-1 h-11 text-sm font-bold rounded-l-lg transition-all ${
               type === "income" ? "bg-accent-green text-[#003320]" : "bg-bg-elevated text-text-secondary border border-white/10"
             }`}>
             Income
           </button>
-          <button type="button" onClick={() => setType("expense")}
+          <button type="button" onClick={() => { setType("expense"); setForm((f) => ({ ...f, categoryId: "" })); }}
             className={`flex-1 h-11 text-sm font-bold rounded-r-lg transition-all ${
               type === "expense" ? "bg-accent-coral text-white" : "bg-bg-elevated text-text-secondary border border-white/10"
             }`}>
@@ -90,7 +92,7 @@ export default function NewTransactionPage() {
           <select value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
             className="w-full h-11 md:h-[38px] px-3 bg-bg-elevated border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-accent-green" required>
             <option value="">Select category</option>
-            {categories.map((c) => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
+            {filteredCategories.map((c) => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
           </select>
         </div>
 

@@ -23,7 +23,7 @@
 
 ## Dashboard Overview Metrics
 
-1. **Total Balance** — Sum of all non-archived account balances (decrypted)
+1. **Total Balance** — Sum of all non-archived account current balances (starting balance + decrypted transaction amounts)
 2. **Monthly Income** — Sum of income transactions this month
 3. **Monthly Expenses** — Sum of expense transactions this month
 4. **Net Worth** — Total assets minus liabilities

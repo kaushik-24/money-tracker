@@ -28,6 +28,12 @@ export default function CategoriesPage() {
       });
   }, []);
 
+  async function handleDelete(id: string) {
+    if (!confirm("Hide this category? It will no longer appear in your lists.")) return;
+    const r = await fetch(`/api/categories/${id}`, { method: "DELETE" });
+    if (r.ok) setCategories((prev) => prev.filter((c) => c.id !== id));
+  }
+
   if (loading) {
     return (
       <div className="p-4 md:p-6 animate-pulse space-y-4">
@@ -50,9 +56,9 @@ export default function CategoriesPage() {
         <Button href="/categories/new" variant="primary">+ New Category</Button>
       </div>
 
-      {incomeCategories.length > 0 && <Section title="Income" categories={incomeCategories} />}
-      {expenseCategories.length > 0 && <Section title="Expenses" categories={expenseCategories} />}
-      {transferCategories.length > 0 && <Section title="Transfers" categories={transferCategories} />}
+      {incomeCategories.length > 0 && <Section title="Income" categories={incomeCategories} onDelete={handleDelete} />}
+      {expenseCategories.length > 0 && <Section title="Expenses" categories={expenseCategories} onDelete={handleDelete} />}
+      {transferCategories.length > 0 && <Section title="Transfers" categories={transferCategories} onDelete={handleDelete} />}
 
       {categories.length === 0 && (
         <EmptyState icon={<Tags size={48} />} message="No categories yet" action={
@@ -63,7 +69,7 @@ export default function CategoriesPage() {
   );
 }
 
-function Section({ title, categories }: { title: string; categories: Category[] }) {
+function Section({ title, categories, onDelete }: { title: string; categories: Category[]; onDelete: (id: string) => void }) {
   return (
     <div className="mb-8">
       <h2 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-text-secondary mb-3">{title}</h2>
@@ -75,13 +81,17 @@ function Section({ title, categories }: { title: string; categories: Category[] 
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white truncate">{cat.name}</p>
-              {cat.isBuiltIn ? (
-                <p className="text-[11px] text-text-secondary">Built-in</p>
-              ) : (
-                <Link href={`/categories/${cat.id}/edit`} className="text-[11px] font-bold uppercase tracking-wider text-accent-green hover:text-white transition-colors">
-                  Edit
-                </Link>
-              )}
+              <div className="flex items-center gap-2">
+                {!cat.isBuiltIn && (
+                  <Link href={`/categories/${cat.id}/edit`} className="text-[11px] font-bold uppercase tracking-wider text-accent-green hover:text-white transition-colors">
+                    Edit
+                  </Link>
+                )}
+                <button onClick={() => onDelete(cat.id)}
+                  className="text-[11px] font-bold uppercase tracking-wider text-accent-coral hover:text-white transition-colors">
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         ))}

@@ -44,12 +44,13 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  accounts     Account[]
-  transactions Transaction[]
-  goals        Goal[]
-  budgets      Budget[]
-  investments  Investment[]
-  categories   Category[]
+  accounts         Account[]
+  transactions     Transaction[]
+  goals            Goal[]
+  budgets          Budget[]
+  investments      Investment[]
+  categories       Category[]
+  hiddenCategories HiddenCategory[]
 }
 
 model Account {
@@ -98,9 +99,10 @@ model Category {
   isBuiltIn Boolean   @default(false)
   createdAt DateTime  @default(now())
 
-  user         User?         @relation(fields: [userId], references: [id])
-  transactions Transaction[]
-  budgets      Budget[]
+  user             User?             @relation(fields: [userId], references: [id])
+  transactions     Transaction[]
+  budgets          Budget[]
+  hiddenBy         HiddenCategory[]
 }
 
 model Budget {
@@ -150,4 +152,16 @@ model Investment {
 
   user    User    @relation(fields: [userId], references: [id])
   account Account @relation(fields: [accountId], references: [id])
+}
+
+model HiddenCategory {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  categoryId String   @map("category_id") @db.Uuid
+
+  user     User     @relation(fields: [userId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([userId, categoryId])
+  @@map("hidden_categories")
 }

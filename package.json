@@ -12,7 +12,9 @@
     "db:seed": "tsx tools/seed-categories.ts",
     "db:setup": "tsx tools/setup-db.ts",
     "keygen": "tsx tools/encrypt-keygen.ts",
-    "register": "tsx tools/register-user.ts"
+    "register": "tsx tools/register-user.ts",
+    "hide-removed-categories": "tsx tools/hide-removed-categories.ts",
+    "notify": "tsx tools/notify-changes.ts"
   },
   "prisma": {
     "seed": "tsx tools/seed-categories.ts"
@@ -28,6 +30,7 @@
     "lucide-react": "^1.17.0",
     "next": "16.2.6",
     "next-auth": "^4.24.14",
+    "nodemailer": "^7.0.13",
     "pg": "^8.21.0",
     "prisma": "^7.8.0",
     "prompts": "^2.4.2",
@@ -40,6 +43,7 @@
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.0",
     "@types/pg": "^8.20.0",
     "@types/prompts": "^2.4.9",
     "@types/react": "^19",

@@ -28,6 +28,9 @@ export default function EditTransactionPage() {
     accountId: "", categoryId: "", amount: "", date: "", description: "", isReconciled: false,
   });
 
+  const txnType = parseFloat(form.amount) >= 0 ? "income" : "expense";
+  const filteredCategories = categories.filter((c) => c.type === txnType);
+
   useEffect(() => {
     if (!params.id) return;
     Promise.all([
@@ -82,7 +85,7 @@ export default function EditTransactionPage() {
           <select value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
             className="w-full h-11 md:h-[38px] px-3 bg-bg-elevated border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-accent-green" required>
             <option value="">Select category</option>
-            {categories.map((c) => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
+            {filteredCategories.map((c) => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
           </select>
         </div>
         <FormInput label="Amount" type="number" step="0.01" value={form.amount}

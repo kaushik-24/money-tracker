@@ -44,13 +44,15 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
 
   const { id } = await params;
   const category = await prisma.category.findFirst({
-    where: session.user.isAdmin ? { id, userId: { not: null } } : { id, userId: session.user.id },
+    where: session.user.isAdmin ? { id } : { id, OR: [{ userId: null }, { userId: session.user.id }] },
   });
   if (!category) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  if (category.isBuiltIn) {
-    return NextResponse.json({ error: "Cannot delete built-in category" }, { status: 403 });
-  }
 
-  await prisma.category.delete({ where: { id } });
+  const existing = await prisma.hiddenCategory.findUnique({
+    where: { userId_categoryId: { userId: session.user.id, categoryId: id } },
+  });
+  if (existing) return NextResponse.json({ error: "Already hidden" }, { status: 409 });
+
+  await prisma.hiddenCategory.create({ data: { userId: session.user.id, categoryId: id } });
   return NextResponse.json({ success: true });
 }

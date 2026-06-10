@@ -12,6 +12,7 @@ interface Category {
   id: string;
   name: string;
   icon: string;
+  type: string;
 }
 
 export function AddSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -24,6 +25,8 @@ export function AddSheet({ open, onClose }: { open: boolean; onClose: () => void
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const filteredCategories = categories.filter((c) => c.type === type);
 
   useEffect(() => {
     if (!open) return;
@@ -73,7 +76,7 @@ export function AddSheet({ open, onClose }: { open: boolean; onClose: () => void
             <div className="flex w-full gap-0">
               <button
                 type="button"
-                onClick={() => setType("income")}
+                onClick={() => { setType("income"); setCategoryId(""); }}
                 className={`flex-1 h-11 text-sm font-bold rounded-l-lg transition-all ${
                   type === "income" ? "bg-accent-green text-[#003320]" : "bg-bg-elevated text-white/50 border border-white/10"
                 }`}
@@ -82,7 +85,7 @@ export function AddSheet({ open, onClose }: { open: boolean; onClose: () => void
               </button>
               <button
                 type="button"
-                onClick={() => setType("expense")}
+                onClick={() => { setType("expense"); setCategoryId(""); }}
                 className={`flex-1 h-11 text-sm font-bold rounded-r-lg transition-all ${
                   type === "expense" ? "bg-accent-coral text-white" : "bg-bg-elevated text-white/50 border border-white/10"
                 }`}
@@ -105,7 +108,7 @@ export function AddSheet({ open, onClose }: { open: boolean; onClose: () => void
               <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}
                 className="w-full h-11 px-3 bg-bg-elevated border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-accent-green" required>
                 <option value="">Select</option>
-                {categories.map((c) => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
+                {filteredCategories.map((c) => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
               </select>
             </div>
 

@@ -107,7 +107,7 @@ enum InvestmentType {
 
 1. **Manual Entry Only** — No auto-fetching from banks or external APIs. All transactions entered via UI forms.
 2. **Encryption at Rest** — Sensitive fields (amount, balance, description) encrypted with AES-256-GCM before writing to PostgreSQL. Decrypted on read.
-3. **No Deletion of Built-in Categories** — Categories with `isBuiltIn: true` cannot be deleted (e.g., "Other Income", "Other Expense").
+3. **No True Deletion of Categories** — All categories (including user-created) use a `HiddenCategory` join table to hide them per-user. The global row is never deleted, preserving referential integrity for existing transactions. Built-in categories cannot be deleted globally for the same reason.
 4. **Soft Archive** — Accounts use `isArchived` flag. Transactions are never deleted from DB.
 5. **Idempotent Seeding** — Seed scripts check for existing data before inserting.
 6. **Encryption Key in .env** — `ENCRYPTION_KEY` as 64-char hex (32 bytes). Never hardcoded.

@@ -51,3 +51,13 @@ npx tsx tools/seed-categories.ts
 - All IDs are UUIDv4 stored as `@db.Uuid`.
 - `DateTime` fields use PostgreSQL's native `timestamptz`.
 - The `DATABASE_URL` in `prisma.config.ts` is read from `process.env`.
+
+## Balance Computation
+
+Account `balance` is treated as the **starting balance** (set at creation). The **current balance** is derived at read time:
+
+```
+current balance = starting balance + sum of all non-archived transaction amounts
+```
+
+This ensures the running balance always reflects the transaction history accurately. The starting balance can only be set at account creation; editing an account does not modify it. Transaction CRUD operations do not touch account balance — the derived computation handles it automatically.

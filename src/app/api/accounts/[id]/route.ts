@@ -14,9 +14,23 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   });
   if (!account) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  const startingBalance = parseFloat(decrypt(account.balance) || "0");
+
+  const transactions = await prisma.transaction.findMany({
+    where: { accountId: id, isArchived: false },
+    select: { amount: true },
+  });
+
+  const transactionSum = transactions.reduce((sum, t) => {
+    const decryptedAmount = parseFloat(decrypt(t.amount) || "0");
+    return sum + decryptedAmount;
+  }, 0);
+
+  const runningBalance = startingBalance + transactionSum;
+
   return NextResponse.json({
     ...account,
-    balance: parseFloat(decrypt(account.balance) || "0"),
+    balance: runningBalance,
   });
 }
 

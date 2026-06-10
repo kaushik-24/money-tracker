@@ -11,7 +11,7 @@ export default function EditAccountPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
-    name: "", type: "checking", balance: "", currency: "USD", color: "#6366f1",
+    name: "", type: "checking", currency: "USD", color: "#6366f1",
   });
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function EditAccountPage() {
     fetch(`/api/accounts/${params.id}`).then(async (r) => {
       if (r.ok) {
         const data = await r.json();
-        setForm({ name: data.name, type: data.type, balance: data.balance.toString(), currency: data.currency, color: data.color });
+        setForm({ name: data.name, type: data.type, currency: data.currency, color: data.color });
         setLoading(false);
       }
     });
@@ -31,7 +31,7 @@ export default function EditAccountPage() {
     const res = await fetch(`/api/accounts/${params.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, balance: parseFloat(form.balance || "0") }),
+      body: JSON.stringify(form),
     });
     if (res.ok) router.push("/accounts");
     else setSubmitting(false);
@@ -55,7 +55,6 @@ export default function EditAccountPage() {
             <option value="cash">Cash</option>
           </select>
         </div>
-        <FormInput label="Balance" type="number" step="0.01" value={form.balance} onChange={(e) => setForm({ ...form, balance: e.target.value })} />
         <div>
           <label className="block text-xs font-semibold uppercase tracking-widest text-text-secondary mb-1.5">Color</label>
           <input type="color" value={form.color} onChange={(e) => setForm({ ...form, color: e.target.value })}

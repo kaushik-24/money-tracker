@@ -13,10 +13,24 @@ export async function GET() {
     orderBy: { createdAt: "desc" },
   });
 
-  const decrypted = accounts.map((a) => ({
-    ...a,
-    balance: parseFloat(decrypt(a.balance) || "0"),
-  }));
+  const accountIds = accounts.map((a) => a.id);
+
+  const transactions = await prisma.transaction.findMany({
+    where: { accountId: { in: accountIds }, isArchived: false },
+    select: { accountId: true, amount: true },
+  });
+
+  const transactionSums: Record<string, number> = {};
+  for (const t of transactions) {
+    const decryptedAmount = parseFloat(decrypt(t.amount) || "0");
+    transactionSums[t.accountId] = (transactionSums[t.accountId] || 0) + decryptedAmount;
+  }
+
+  const decrypted = accounts.map((a) => {
+    const startingBalance = parseFloat(decrypt(a.balance) || "0");
+    const runningBalance = startingBalance + (transactionSums[a.id] || 0);
+    return { ...a, balance: runningBalance };
+  });
 
   return NextResponse.json(decrypted);
 }
